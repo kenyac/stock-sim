@@ -1,0 +1,12 @@
+.auth-container{
+    background-color: #252629;
+    color: white;
+    height: calc(100% - 56px);
+    width: 100%;
+}
+
+@media only screen and (min-width: 600px) {
+    .auth-container{
+        height: calc(100% - 64px);
+    }    
+}

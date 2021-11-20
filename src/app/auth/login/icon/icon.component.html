@@ -1,0 +1,13 @@
+<div>
+    <svg [ngStyle]="svgDims">
+        <rect *ngFor="let bar of bars"
+              #rect
+              [attr.x]="bar.x"
+              [attr.y]="150"
+              [attr.width]="bar.width"
+              [attr.height]="bar.height"
+              [attr.fill]="bar.fill"/>
+        <line x1="0" y1="150" x2="150" y2="150" stroke="white" stroke-width="2"/>
+        <line x1="0" y1="150" x2="0" y2="0" stroke="white" stroke-width="2"/>
+    </svg>
+</div>
