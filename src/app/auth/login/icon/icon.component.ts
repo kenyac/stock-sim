@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, QueryList, Renderer2, ViewChildren } from '@angular/core';
-import { interval, animationFrameScheduler, observable, from, EMPTY, of } from 'rxjs';
+import { interval, animationFrameScheduler, observable, from, EMPTY, of, merge, Observable, concat } from 'rxjs';
 import { timestamp, map, takeWhile, tap, concatAll, take, startWith, scan, mapTo, delay, timeInterval, mergeAll } from 'rxjs/operators';
 import { Bar } from './bar.model';
 
@@ -10,7 +10,8 @@ import { Bar } from './bar.model';
 })
 export class IconComponent implements OnInit, AfterViewInit {
 
-  @ViewChildren('rect') rects!: QueryList<any>;
+  @ViewChildren('rect') rects!: QueryList<SVGRectElement>;
+  @ViewChildren('line') lines!: QueryList<SVGLineElement>;
 
   svgDims: Record<string, string> = {};
   numBars: number = 6;
@@ -55,11 +56,13 @@ export class IconComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
-    //console.log(this.rects);
+    console.log(this.lines);
     //this.rects.forEach(rect => console.log(rect.nativeElement.getAttribute('height')));
     //this.animate(this.rects, 'y', 500);
     //console.log(Array.from(this.bars, b => b.height));
-    this.test(this.rects, 'y', 550, Array.from(this.bars, b => b.height));
+    let obs1$ = this.test2(this.lines, ['x2', 'y2'], 125, [[0,150],[150,0]]);
+    let obs2$ = this.test(this.rects, 'y', 550, Array.from(this.bars, b => b.height), true);
+    this.queue([obs1$, obs2$]);
   }
 
   setSVGDims() {
@@ -69,19 +72,8 @@ export class IconComponent implements OnInit, AfterViewInit {
     };
   }
 
-  animate(target: QueryList<any>, property: string, duration: number){
-    target.forEach(o => {
-      let h = o.nativeElement.getAttribute('height');
-      let start = o.nativeElement.getAttribute(property)
-      let increment = h / duration;
-      //console.log(o, increment);
-      this.dur(duration).subscribe(t => {
-        this.renderer.setAttribute(o.nativeElement, property, (150 - increment * t).toString())
-      });
-    });   
-  }
-
-  test(target: QueryList<any>, property: string, duration: number, values: number[]) {
+  test(target: QueryList<any>, property: string, duration: number, values: number[], async: boolean = false) {
+    const timing = async? concatAll: mergeAll;
     console.log(target.toArray());
     let i: number = 0;
     let sum = values.reduce((p,c) => p + c);
@@ -101,11 +93,38 @@ export class IconComponent implements OnInit, AfterViewInit {
       )
     );
     
-    const firstOrder = higherOrder$.pipe(concatAll());
-    firstOrder.subscribe(x => console.log(x));
+    const firstOrder = higherOrder$.pipe(timing());
     
+    return firstOrder;
 
   } 
+
+  test2(target: QueryList<any>, property: string[], duration: number, values: number[][], async: boolean = false) {
+    const timing = async? concatAll: mergeAll;
+    console.log(target.toArray());
+    let i: number = 0;
+    const obs$ = from(target.toArray())
+    const higherOrder$ = obs$.pipe(
+      map((o) => {
+        let s = values[0][i];
+        let v = values[1][i];
+        let increment = (v - s) / duration;
+        console.log(increment);
+        let p = property[i];
+        i++;
+        return this.dur(duration).pipe(
+        map((t) => {
+          this.renderer.setAttribute(o.nativeElement, p, (s + increment * t).toString());
+          return (increment * t).toString();
+        }));
+      }
+      )
+    );
+    
+    const firstOrder = higherOrder$.pipe(timing());
+    
+    return firstOrder;
+  }
 
   dur(d: number) {
     return this.requestAnimationFrame$.pipe(
@@ -114,5 +133,11 @@ export class IconComponent implements OnInit, AfterViewInit {
       scan((t,n) => t === d ? t + 1 : Math.min(t + n, d)),
       takeWhile(t => t <= d)
     );
+  }
+
+  queue(obs$: Observable<any>[]){
+    const higherOrder = from(obs$);
+    const firstOrder = higherOrder.pipe(concatAll());
+    firstOrder.subscribe()
   }
 }
