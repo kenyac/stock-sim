@@ -1,5 +1,32 @@
 <div fxLayout="column"
-     fxLayoutAlign="center center"
+     fxLayoutAlign="space-evenly center"
      class="auth-container">
     <app-icon></app-icon>
+    <form [formGroup]="loginForm" 
+          (ngSubmit)="formSubmit()" 
+          fxLayout="column"
+          fxLayoutAlign="center center">
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput
+                    type="email"
+                    name="email"
+                    formControlName="email" 
+                    placeholder="Email"
+                    email>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput
+                    type="password"
+                    formControlName="password"
+                    placeholder="Password">
+        </mat-form-field>
+        <button mat-stroked-button
+                fxFlexAlign="end"
+                type="submit"
+                [disabled]="!loginForm.valid"
+                color="accent">Login</button>
+    </form>
+    <p>Don't have an account? <a routerLink="/auth/signup">Sign Up!</a></p>
 </div>

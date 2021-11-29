@@ -56,7 +56,7 @@ export class IconComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
-    console.log(this.lines);
+    console.log(Array.from(this.bars, b => b.height));
     //this.rects.forEach(rect => console.log(rect.nativeElement.getAttribute('height')));
     //this.animate(this.rects, 'y', 500);
     //console.log(Array.from(this.bars, b => b.height));
@@ -74,7 +74,6 @@ export class IconComponent implements OnInit, AfterViewInit {
 
   test(target: QueryList<any>, property: string, duration: number, values: number[], async: boolean = false) {
     const timing = async? concatAll: mergeAll;
-    console.log(target.toArray());
     let i: number = 0;
     let sum = values.reduce((p,c) => p + c);
     const obs$ = from(target.toArray())
@@ -82,6 +81,7 @@ export class IconComponent implements OnInit, AfterViewInit {
       map((o) => {
         let h = values[i];
         let d = duration * (h / sum);
+        console.log(d);
         let increment = h / d;
         i++;
         return this.dur(d).pipe(
@@ -101,7 +101,6 @@ export class IconComponent implements OnInit, AfterViewInit {
 
   test2(target: QueryList<any>, property: string[], duration: number, values: number[][], async: boolean = false) {
     const timing = async? concatAll: mergeAll;
-    console.log(target.toArray());
     let i: number = 0;
     const obs$ = from(target.toArray())
     const higherOrder$ = obs$.pipe(
@@ -130,7 +129,7 @@ export class IconComponent implements OnInit, AfterViewInit {
     return this.requestAnimationFrame$.pipe(
       timeInterval(),
       map(x => x.interval),
-      scan((t,n) => t === d ? t + 1 : Math.min(t + n, d)),
+      scan((t,n) => t === d ? t + 1 : Math.min(t + n, d),0),
       takeWhile(t => t <= d)
     );
   }

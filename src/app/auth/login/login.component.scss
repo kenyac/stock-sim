@@ -5,6 +5,20 @@
     width: 100%;
 }
 
+mat-form-field{
+    display: block;
+}
+
+a {
+    text-decoration: none;button
+    &:link {
+        color: #69f0ae;
+    }
+    &:visited {
+        color: #69f0ae;
+    }
+}
+
 @media only screen and (min-width: 600px) {
     .auth-container{
         height: calc(100% - 64px);

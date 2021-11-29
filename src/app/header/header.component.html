@@ -9,11 +9,18 @@
            routerLinkActive="mat-accent">
             <mat-icon>bar_chart</mat-icon>
         </a>
-        <div fxFlex fxLayoutAlign="end">
+        <div fxFlex fxLayoutAlign="end"
+        *ngIf="(authStatus$ | async) !== true">
             <a mat-icon-button 
                routerLink="/auth/login" 
                routerLinkActive="mat-accent">
                 <mat-icon>login</mat-icon>
+            </a>
+        </div>
+        <div fxFlex fxLayoutAlign="end"
+        *ngIf="(authStatus$ | async) === true">
+            <a mat-icon-button (click)="logout()">
+                <mat-icon>logout</mat-icon>
             </a>
         </div>
     </div>

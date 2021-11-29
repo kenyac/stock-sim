@@ -1,1 +1,45 @@
-<p>signup works!</p>
+<div fxLayout="column"
+     fxLayoutAlign="space-evenly center"
+     class="auth-container">
+     <form [formGroup]="signupForm"
+     (ngSubmit)="formSubmit()" 
+     fxLayout="column"
+     fxLayoutAlign="center center">
+     <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput
+                 type="email"
+                 name="email"
+                 formControlName="email" 
+                 placeholder="Email"
+                 email>
+     </mat-form-field>
+     <mat-form-field appearance="outline">
+          <mat-label>Username</mat-label>
+          <input matInput
+                 type="text"
+                 formControlName="username" 
+                 placeholder="Username">
+     </mat-form-field>
+     <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input matInput
+                 type="password"
+                 formControlName="password"
+                 placeholder="Password">
+     </mat-form-field>
+     <mat-form-field appearance="outline">
+          <mat-label>Confirm Password</mat-label>
+          <input matInput
+                 type="password"
+                 formControlName="passwordConfirm"
+                 placeholder="Confirm Password">
+          <mat-hint *ngIf="signupForm.errors?.noMatch">Passwords do not match</mat-hint>
+     </mat-form-field>
+     <button mat-raised-button
+             fxFlexAlign="end"
+             type="submit"
+             [disabled]="!signupForm.valid"
+             color="primary">Sign Up!</button>
+</form>
+</div>

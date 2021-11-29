@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit, Renderer2 } from '@angular/core';
-import { animationFrame, animationFrameScheduler, concat, interval, of, scheduled, Scheduler, timer } from 'rxjs';
-import { map, repeat, takeUntil, takeWhile, tap, timeInterval, timestamp } from 'rxjs/operators'
+import { ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -10,13 +10,20 @@ import { map, repeat, takeUntil, takeWhile, tap, timeInterval, timestamp } from 
 })
 export class LoginComponent implements OnInit {
   
-  constructor() { }
+  loginForm = new FormGroup({
+    email: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required)
+  });
+  
+  constructor(private authService: AuthService) { }
 
 
   ngOnInit(): void {
   }
 
-  
+  formSubmit(){
+    this.authService.login(this.loginForm.value.email, this.loginForm.value.password);
+  }
 
 
 }
