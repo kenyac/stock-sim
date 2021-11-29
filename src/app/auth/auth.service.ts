@@ -30,6 +30,10 @@ export class AuthService {
     return this.isAuthenticated;
   }
 
+  getToken() {
+    return this.token;
+  }
+
   createUser(user: Signup){
     this.http.post(BACKEND_URL + '/signup', user).subscribe(
       () => {
