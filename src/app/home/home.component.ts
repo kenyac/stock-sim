@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HomeService } from './home.service';
+import { TransactionService } from '../shared/transaction/transaction.service';
 
 @Component({
   selector: 'app-home',
@@ -8,10 +8,8 @@ import { HomeService } from './home.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private homeService: HomeService) { }
+  constructor(private transactionService: TransactionService) { }
 
-  ngOnInit(): void {
-    this.homeService.getTransactions();
-  }
+  ngOnInit(): void { }
 
 }

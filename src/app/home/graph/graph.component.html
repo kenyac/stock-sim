@@ -1,1 +1,9 @@
-<p>graph works!</p>
+<div>
+    <svg [ngStyle]="svgDims" [attr.viewBox]="svgViewBox">
+        <g [attr.transform]="yTransform">
+        </g>
+        <g [attr.transform]="xTransform">     
+            <path [attr.d]="xAxis" [attr.stroke]="stroke"></path>       
+        </g>
+    </svg>
+</div>
